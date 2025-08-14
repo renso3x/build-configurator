@@ -1,36 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Build Configurator Project
 
-## Getting Started
+## Overview
 
-First, run the development server:
+A Next.js application with Prisma and MongoDB for managing users and data.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Folder Structure
+
+```
+/configurator
+├── .env                      # Environment variables
+├── prisma/
+│   ├── schema.prisma         # Database schema
+│   └── seed.ts               # Optional seeding script
+├── src/
+│   ├── app/                  # Next.js App Router
+│   │   ├── api/              # API Routes
+│   │   └── page.tsx          # Home page
+│   ├── components/           # React components
+│   │   ├── ui/               # Reusable UI components
+│   │   └── forms/            # Form components
+│   ├── lib/                  # Utility libraries
+│   │   ├── prisma.ts         # Prisma client
+│   │   └── utils.ts          # Helper functions
+│   ├── server/               # Server-only code
+│   │   ├── actions/          # Server Actions
+│   │   │   └── users.ts      # User-related actions
+│   │   └── db/               # Database queries
+│   │       └── user.ts       # User-specific database operations
+│   └── types/                # TypeScript types
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Setup
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Install dependencies:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+   ```bash
+   npm install
+   ```
 
-## Learn More
+2. Set up your MongoDB connection in `.env`:
 
-To learn more about Next.js, take a look at the following resources:
+   ```
+   DATABASE_URL=mongodb+srv://username:password@cluster.mongodb.net/dbname?retryWrites=true&w=majority
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. Push schema to database:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+   ```bash
+   npx prisma db push
+   npx prisma generate --no-engine
+   ```
 
-## Deploy on Vercel
+4. Run the development server:
+   ```bash
+   npm run dev
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Database Management
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Always run these commands after schema changes:**
+
+```bash
+npx prisma db push
+npx prisma generate --no-engine
+```
+
+## Working with Server Actions
+
+Server actions are located in `src/server/actions/` and can be imported in your client components:
+
+```typescript
+import { createUser } from "@/server/actions/users";
+
+// Then use in a form or button handler
+const handleSubmit = async (formData) => {
+  await createUser({
+    email: formData.get("email"),
+    name: formData.get("name"),
+  });
+};
+```
