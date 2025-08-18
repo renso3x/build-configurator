@@ -1,8 +1,19 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Users, UserPlus, UserCheck, UserX } from "lucide-react";
+import supabase from "@/lib/supabase/client";
 
-export default function UsersPage() {
+export default async function UsersPage() {
+  const { data } = await supabase.from("users").select("*");
+
+  console.log("Fetched users:", data);
+
   return (
     <div className="space-y-6">
       <div>
@@ -11,7 +22,7 @@ export default function UsersPage() {
           Manage your application users and their permissions
         </p>
       </div>
-      
+
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -25,7 +36,7 @@ export default function UsersPage() {
             </p>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">New Users</CardTitle>
@@ -33,12 +44,10 @@ export default function UsersPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">+180</div>
-            <p className="text-xs text-muted-foreground">
-              +7% from last month
-            </p>
+            <p className="text-xs text-muted-foreground">+7% from last month</p>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Active Users</CardTitle>
@@ -51,10 +60,12 @@ export default function UsersPage() {
             </p>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Inactive Users</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Inactive Users
+            </CardTitle>
             <UserX className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -81,34 +92,68 @@ export default function UsersPage() {
               Add User
             </Button>
           </div>
-          
+
           <div className="space-y-4">
             {[
-              { name: "John Doe", email: "john@example.com", status: "Active", joined: "2 days ago" },
-              { name: "Jane Smith", email: "jane@example.com", status: "Active", joined: "1 week ago" },
-              { name: "Bob Johnson", email: "bob@example.com", status: "Inactive", joined: "2 weeks ago" },
-              { name: "Alice Brown", email: "alice@example.com", status: "Active", joined: "1 month ago" },
+              {
+                name: "John Doe",
+                email: "john@example.com",
+                status: "Active",
+                joined: "2 days ago",
+              },
+              {
+                name: "Jane Smith",
+                email: "jane@example.com",
+                status: "Active",
+                joined: "1 week ago",
+              },
+              {
+                name: "Bob Johnson",
+                email: "bob@example.com",
+                status: "Inactive",
+                joined: "2 weeks ago",
+              },
+              {
+                name: "Alice Brown",
+                email: "alice@example.com",
+                status: "Active",
+                joined: "1 month ago",
+              },
             ].map((user, index) => (
-              <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+              <div
+                key={index}
+                className="flex items-center justify-between p-4 border rounded-lg"
+              >
                 <div className="flex items-center space-x-4">
                   <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                    {user.name.split(' ').map(n => n[0]).join('')}
+                    {user.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")}
                   </div>
                   <div>
                     <p className="font-medium">{user.name}</p>
-                    <p className="text-sm text-muted-foreground">{user.email}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {user.email}
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-4">
-                  <span className={`px-2 py-1 rounded-full text-xs ${
-                    user.status === 'Active' 
-                      ? 'bg-green-100 text-green-800' 
-                      : 'bg-gray-100 text-gray-800'
-                  }`}>
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs ${
+                      user.status === "Active"
+                        ? "bg-green-100 text-green-800"
+                        : "bg-gray-100 text-gray-800"
+                    }`}
+                  >
                     {user.status}
                   </span>
-                  <span className="text-sm text-muted-foreground">{user.joined}</span>
-                  <Button variant="outline" size="sm">Edit</Button>
+                  <span className="text-sm text-muted-foreground">
+                    {user.joined}
+                  </span>
+                  <Button variant="outline" size="sm">
+                    Edit
+                  </Button>
                 </div>
               </div>
             ))}

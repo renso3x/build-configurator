@@ -14,6 +14,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { useAuth } from "@/contexts/AuthProvider";
 
 interface UserProfileProps {
   user?: {
@@ -24,13 +25,14 @@ interface UserProfileProps {
   };
 }
 
-export function UserProfile({ 
+export function UserProfile({
   user = {
     name: "John Doe",
     email: "john@example.com",
-    initials: "JD"
-  }
+    initials: "JD",
+  },
 }: UserProfileProps) {
+  const { signOut } = useAuth();
   return (
     <SidebarFooter>
       <SidebarMenu>
@@ -44,7 +46,11 @@ export function UserProfile({
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage src={user.avatar} alt={user.name} />
                   <AvatarFallback className="rounded-lg">
-                    {user.initials || user.name.split(' ').map(n => n[0]).join('')}
+                    {user.initials ||
+                      user.name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")}
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
@@ -65,7 +71,11 @@ export function UserProfile({
                   <Avatar className="h-8 w-8 rounded-lg">
                     <AvatarImage src={user.avatar} alt={user.name} />
                     <AvatarFallback className="rounded-lg">
-                      {user.initials || user.name.split(' ').map(n => n[0]).join('')}
+                      {user.initials ||
+                        user.name
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")}
                     </AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
@@ -79,7 +89,7 @@ export function UserProfile({
                 <Settings className="mr-2 h-4 w-4" />
                 <span>Settings</span>
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={signOut}>
                 <span>Sign out</span>
               </DropdownMenuItem>
             </DropdownMenuContent>

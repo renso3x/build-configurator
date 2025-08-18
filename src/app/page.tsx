@@ -1,8 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import { User } from "@prisma/client";
-import { createUser } from "@/server/actions/users";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,6 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useState } from "react";
 
 export default function UserForm() {
   const [formData, setFormData] = useState({ email: "", name: "" });
@@ -28,15 +26,15 @@ export default function UserForm() {
     setIsSubmitting(true);
     setStatusMessage("");
 
-    try {
-      const newUser = await createUser(formData as User);
-      setStatusMessage(`Success! User ${newUser.email} has been created.`);
-      setFormData({ email: "", name: "" });
-    } catch (err) {
-      setStatusMessage(`Failed: ${err}`);
-    } finally {
-      setIsSubmitting(false);
-    }
+    // try {
+    //   const newUser = await createUser(formData as User);
+    //   setStatusMessage(`Success! User ${newUser.email} has been created.`);
+    //   setFormData({ email: "", name: "" });
+    // } catch (err) {
+    //   setStatusMessage(`Failed: ${err}`);
+    // } finally {
+    //   setIsSubmitting(false);
+    // }
   };
 
   return (
