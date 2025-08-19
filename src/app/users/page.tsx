@@ -7,12 +7,10 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Users, UserPlus, UserCheck, UserX } from "lucide-react";
-import supabase from "@/lib/supabase/client";
+import { prisma } from "@/db/prisma";
 
 export default async function UsersPage() {
-  const { data } = await supabase.from("users").select("*");
-
-  console.log("Fetched users:", data);
+  const users = await prisma.user.findMany({ where: {} });
 
   return (
     <div className="space-y-6">
@@ -94,66 +92,24 @@ export default async function UsersPage() {
           </div>
 
           <div className="space-y-4">
-            {[
-              {
-                name: "John Doe",
-                email: "john@example.com",
-                status: "Active",
-                joined: "2 days ago",
-              },
-              {
-                name: "Jane Smith",
-                email: "jane@example.com",
-                status: "Active",
-                joined: "1 week ago",
-              },
-              {
-                name: "Bob Johnson",
-                email: "bob@example.com",
-                status: "Inactive",
-                joined: "2 weeks ago",
-              },
-              {
-                name: "Alice Brown",
-                email: "alice@example.com",
-                status: "Active",
-                joined: "1 month ago",
-              },
-            ].map((user, index) => (
+            {users.map((user, index) => (
               <div
                 key={index}
                 className="flex items-center justify-between p-4 border rounded-lg"
               >
                 <div className="flex items-center space-x-4">
                   <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                    {user.name
+                    {user.firstName
                       .split(" ")
                       .map((n) => n[0])
                       .join("")}
                   </div>
                   <div>
-                    <p className="font-medium">{user.name}</p>
+                    <p className="font-medium">{user.lastName}</p>
                     <p className="text-sm text-muted-foreground">
                       {user.email}
                     </p>
                   </div>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <span
-                    className={`px-2 py-1 rounded-full text-xs ${
-                      user.status === "Active"
-                        ? "bg-green-100 text-green-800"
-                        : "bg-gray-100 text-gray-800"
-                    }`}
-                  >
-                    {user.status}
-                  </span>
-                  <span className="text-sm text-muted-foreground">
-                    {user.joined}
-                  </span>
-                  <Button variant="outline" size="sm">
-                    Edit
-                  </Button>
                 </div>
               </div>
             ))}

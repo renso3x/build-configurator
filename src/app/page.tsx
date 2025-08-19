@@ -1,5 +1,4 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,6 +9,8 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { createUser } from "@/server/actions/user";
+
 import { useState } from "react";
 
 export default function UserForm() {
@@ -26,15 +27,14 @@ export default function UserForm() {
     setIsSubmitting(true);
     setStatusMessage("");
 
-    // try {
-    //   const newUser = await createUser(formData as User);
-    //   setStatusMessage(`Success! User ${newUser.email} has been created.`);
-    //   setFormData({ email: "", name: "" });
-    // } catch (err) {
-    //   setStatusMessage(`Failed: ${err}`);
-    // } finally {
-    //   setIsSubmitting(false);
-    // }
+    const errorMessage = (await createUser(formData)).errorMessage;
+
+    if (errorMessage) {
+      setStatusMessage(`Failed: ${errorMessage}`);
+      return;
+    }
+    setStatusMessage(`Success! User ${formData.email} has been created.`);
+    setFormData({ email: "", name: "" });
   };
 
   return (
