@@ -1,32 +1,14 @@
 "use client";
 
-import { SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "./app-sidebar";
 import { AppHeader } from "./app-header";
 import { type NavigationItem } from "./navigation-config";
 import { usePathname } from "next/navigation";
 
 interface AppLayoutProps {
   children: React.ReactNode;
-  navigationItems?: NavigationItem[];
-  user?: {
-    name: string;
-    email: string;
-    avatar?: string;
-    initials?: string;
-  };
-  headerConfig?: {
-    showSearch?: boolean;
-    showNotifications?: boolean;
-  };
 }
 
-export function AppLayout({
-  children,
-  navigationItems,
-  user,
-  headerConfig = { showSearch: true, showNotifications: true },
-}: AppLayoutProps) {
+export function AppLayout({ children }: AppLayoutProps) {
   const pathname = usePathname();
 
   const isAuthRoute = pathname.startsWith("/signin");
@@ -40,12 +22,11 @@ export function AppLayout({
   }
 
   return (
-    <SidebarProvider>
-      <AppSidebar navigationItems={navigationItems} user={user} />
-      <main className="flex flex-1 flex-col">
-        <AppHeader {...headerConfig} />
-        <div className="flex-1 p-6">{children}</div>
+    <section className="min-h-screen bg-slate-50">
+      <AppHeader />
+      <main className="flex-1  flex-col bg-white shadow-sm rounded-md overflow-hidden w-full mx-auto max-w-full px-4 sm:px-6 lg:px-8 py-8 flex gap-6">
+        {children}
       </main>
-    </SidebarProvider>
+    </section>
   );
 }

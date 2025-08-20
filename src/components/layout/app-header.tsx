@@ -1,32 +1,18 @@
-import { Bell } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { SearchBar } from "./search-bar";
+import AppMenu from "./app-menu";
 
-interface AppHeaderProps {
-  showSearch?: boolean;
-  showNotifications?: boolean;
-}
-
-export function AppHeader({ 
-  showSearch = true, 
-  showNotifications = true 
-}: AppHeaderProps) {
+export function AppHeader() {
   return (
-    <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
-      <SidebarTrigger className="-ml-1" />
-      <div className="flex flex-1 items-center gap-2 px-3">
-        {showSearch && (
-          <div className="flex-1">
-            <SearchBar />
-          </div>
-        )}
-        {showNotifications && (
-          <Button variant="outline" size="icon">
-            <Bell className="h-4 w-4" />
-          </Button>
-        )}
-      </div>
+    <header>
+      <nav className="mx-auto max-w-full bg-black text-white flex-1 flex justify-between px-4 lg:px-8 sm:px-4 h-16 gap-4 items-center">
+        <div className="items-center text-sm font-medium">
+          <span className="text-lg font-bold">COMPANY</span>
+        </div>
+        <div className="items-center text-sm">
+          <a className="text-slate-300 hover:text-white">Logout</a>
+        </div>
+      </nav>
+
+      <AppMenu />
     </header>
   );
 }
