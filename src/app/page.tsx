@@ -9,12 +9,16 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { createUser } from "@/server/actions/user";
-
+import { createUser } from "@/actions/user";
 import { useState } from "react";
+import { UserCreate } from "@/types/prisma";
 
 export default function UserForm() {
-  const [formData, setFormData] = useState({ email: "", name: "" });
+  const [formData, setFormData] = useState<UserCreate>({
+    email: "",
+    firstName: "",
+    lastName: "",
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [statusMessage, setStatusMessage] = useState("");
 
@@ -34,7 +38,7 @@ export default function UserForm() {
       return;
     }
     setStatusMessage(`Success! User ${formData.email} has been created.`);
-    setFormData({ email: "", name: "" });
+    setFormData({ email: "", firstName: "", lastName: "" });
   };
 
   return (
@@ -111,9 +115,24 @@ export default function UserForm() {
                 <Input
                   id="name"
                   type="text"
-                  value={formData.name}
-                  onChange={(e) => handleInputChange("name", e.target.value)}
-                  placeholder="Enter your full name"
+                  value={formData.firstName}
+                  onChange={(e) =>
+                    handleInputChange("firstName", e.target.value)
+                  }
+                  placeholder="Enter your first name"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="name">Full Name (optional)</Label>
+                <Input
+                  id="name"
+                  type="text"
+                  value={formData.lastName}
+                  onChange={(e) =>
+                    handleInputChange("lastName", e.target.value)
+                  }
+                  placeholder="Enter your last name"
                 />
               </div>
 
