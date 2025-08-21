@@ -1,17 +1,23 @@
+import { useAuth } from "@/contexts/AuthProvider";
+import { Button } from "../ui/button";
 import AppMenu from "./app-menu";
 
 export function AppHeader() {
+  const { signOut } = useAuth();
   return (
     <header>
-      <nav className="mx-auto max-w-full bg-black text-white flex-1 flex justify-between px-4 lg:px-8 sm:px-4 h-16 gap-4 items-center">
+      <nav className="flex justify-between items-center border-b border-white/10 px-4 lg:px-8 sm:px-8 h-16 max-w-full mx-auto">
         <div className="items-center text-sm font-medium">
           <span className="text-lg font-bold">COMPANY</span>
         </div>
-        <div className="items-center text-sm">
-          <a className="text-slate-300 hover:text-white">Logout</a>
-        </div>
+        <ul className="flex gap-2 text-sm">
+          <li>
+            <Button onClick={signOut} className="cursor-pointer">
+              Logout
+            </Button>
+          </li>
+        </ul>
       </nav>
-
       <AppMenu />
     </header>
   );

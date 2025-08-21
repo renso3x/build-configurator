@@ -1,7 +1,6 @@
 "use client";
 
 import { AppHeader } from "./app-header";
-import { type NavigationItem } from "./navigation-config";
 import { usePathname } from "next/navigation";
 
 interface AppLayoutProps {
