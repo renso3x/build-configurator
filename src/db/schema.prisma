@@ -15,9 +15,6 @@ model User {
     email     String   @unique
     createdAt DateTime @default(now())
     updatedAt DateTime @default(now()) @updatedAt
-
-    // Relations
-    orders Order[]
 }
 
 model Role {
@@ -25,121 +22,25 @@ model Role {
     type RoleType
 }
 
-// Form Configuration Models
-model Form {
-    id          String   @id @default(uuid())
-    name        String   @db.VarChar(255)
-    description String?  @db.Text
-    isActive    Boolean  @default(true)
-    version     String   @default("1.0")
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
-
-    // Relations
-    sections Section[]
-    orders   Order[]
-
-    @@map("forms")
-}
-
 model Section {
-    id          String   @id @default(uuid())
-    formId      String
-    name        String   @db.VarChar(255)
-    description String?  @db.Text
-    order       Int // For ordering sections within a form
-    isRequired  Boolean  @default(false)
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
+    id   String @id @default(uuid())
+    name String @unique @db.VarChar(255)
 
-    // Relations
-    form           Form            @relation(fields: [formId], references: [id], onDelete: Cascade)
     specifications Specification[]
-
-    @@map("sections")
+    createdAt      DateTime        @default(now())
+    updatedAt      DateTime        @default(now()) @updatedAt
 }
 
 model Specification {
-    id          String    @id @default(uuid())
-    sectionId   String
-    name        String    @db.VarChar(255)
-    description String?   @db.Text
-    order       Int // For ordering specifications within a section
-    isRequired  Boolean   @default(false)
-    inputType   InputType @default(SINGLE_SELECT)
-    createdAt   DateTime  @default(now())
-    updatedAt   DateTime  @updatedAt
+    id    String @id @default(uuid())
+    name  String @db.VarChar(255)
+    price Int    @default(0)
 
-    // Relations
-    section         Section             @relation(fields: [sectionId], references: [id], onDelete: Cascade)
-    items           SpecificationItem[]
-    orderSelections OrderSelection[]
+    sectionId String?
+    section   Section? @relation(fields: [sectionId], references: [id])
 
-    @@map("specifications")
-}
-
-model SpecificationItem {
-    id              String   @id @default(uuid())
-    specificationId String
-    name            String   @db.VarChar(255)
-    description     String?  @db.Text
-    price           Decimal? @db.Decimal(10, 2)
-    order           Int // For ordering items within a specification
-    isDefault       Boolean  @default(false)
-    isAvailable     Boolean  @default(true)
-    sku             String?  @db.VarChar(100)
-    createdAt       DateTime @default(now())
-    updatedAt       DateTime @updatedAt
-
-    // Relations
-    specification   Specification    @relation(fields: [specificationId], references: [id], onDelete: Cascade)
-    orderSelections OrderSelection[]
-
-    @@map("specification_items")
-}
-
-// Order Management Models
-model Order {
-    id            String      @id @default(uuid())
-    userId        String
-    formId        String
-    orderNumber   String      @unique
-    status        OrderStatus @default(DRAFT)
-    totalPrice    Decimal?    @db.Decimal(10, 2)
-    customerNotes String?     @db.Text
-    internalNotes String?     @db.Text
-    submittedAt   DateTime?
-    createdAt     DateTime    @default(now())
-    updatedAt     DateTime    @updatedAt
-
-    // Relations
-    user       User             @relation(fields: [userId], references: [id])
-    form       Form             @relation(fields: [formId], references: [id])
-    selections OrderSelection[]
-
-    @@map("orders")
-}
-
-model OrderSelection {
-    id                  String   @id @default(uuid())
-    orderId             String
-    specificationId     String
-    specificationItemId String? // Null for custom text inputs
-    customValue         String?  @db.Text // For text inputs or custom values
-    quantity            Int      @default(1)
-    unitPrice           Decimal? @db.Decimal(10, 2)
-    totalPrice          Decimal? @db.Decimal(10, 2)
-    createdAt           DateTime @default(now())
-    updatedAt           DateTime @updatedAt
-
-    // Relations
-    order             Order              @relation(fields: [orderId], references: [id], onDelete: Cascade)
-    specification     Specification      @relation(fields: [specificationId], references: [id])
-    specificationItem SpecificationItem? @relation(fields: [specificationItemId], references: [id])
-
-    // Ensure one selection per specification per order
-    @@unique([orderId, specificationId])
-    @@map("order_selections")
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now()) @updatedAt
 }
 
 // Enums
