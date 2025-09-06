@@ -1,4 +1,4 @@
-import { useAuth } from "@/contexts/AuthProvider";
+import { useAuth } from "@/contexts/auth-context-provider";
 import { Button } from "../ui/button";
 import AppMenu from "./app-menu";
 

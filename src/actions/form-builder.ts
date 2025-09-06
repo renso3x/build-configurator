@@ -1,9 +1,11 @@
 "use server";
 
-import { FormFields } from "@/components/form-builder";
+import { type SectionWithSpecsFormData } from "@/lib/validations";
 import { prisma } from "@/db/prisma";
 
-export const createFormBuilder = async (formFields: FormFields[]) => {
+export const createFormBuilder = async (
+  formFields: SectionWithSpecsFormData[]
+) => {
   try {
     const results = [];
 
@@ -45,6 +47,17 @@ export const createFormBuilder = async (formFields: FormFields[]) => {
       message: "Failed to create form data",
     };
   }
+};
+
+export const getAllFormFields = async () => {
+  return await prisma.section.findMany({
+    include: {
+      specifications: true,
+    },
+    orderBy: {
+      createdAt: "asc",
+    },
+  });
 };
 
 export const getAllSectionsWithSpecs = async () => {
